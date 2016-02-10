@@ -122,8 +122,8 @@ void update() {
 }
 
 void setupioEnergies() {
-  ioEnergies.put("Na", new IonizationEnergy(490, 0));
-  ioEnergies.put("K", new IonizationEnergy(420, 0));
+  ioEnergies.put("Na", new IonizationEnergy(0, 490));
+  ioEnergies.put("K", new IonizationEnergy(0, 420));
   ioEnergies.put("Mg", new IonizationEnergy(730, 1450));
   ioEnergies.put("Ca", new IonizationEnergy(590, 1145));
   

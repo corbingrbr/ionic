@@ -26,8 +26,6 @@ public class Atom {
   private boolean eTransferring = false;
   private float otherAtomDistance;
   private PVector eTransVec;
-
-
   
   private float fps = frameRate;
   private float numBounces = 2.5;
@@ -229,14 +227,8 @@ public class Atom {
       
       PVector pv = getVecForElectron();
       float theta = getAngleForElectron();
-      if ( toExchangeWith == null) {
-      System.out.println("No Exchange With!");
-      }
-     
-      
-      pushMatrix();
-      
     
+      pushMatrix(); 
       translate(pv.x*size + u*eTransVec.x, pv.y*size +  u*eTransVec.y);
       rotate(theta+HALF_PI);
       fill(clr.x, clr.y, clr.z);
@@ -344,7 +336,7 @@ public class Atom {
           
     if (normal.dot(cross) < 0) { a = -a; }
     
-    this.rotationAdjust = a/(collisionDuration * fps); 
+    this.rotationAdjust = a/(collisionDuration * fps);
   }
   
   public void setCollisionAnimation(float speed, PVector direction) { 
@@ -370,6 +362,7 @@ public class Atom {
         eExchangeInfo.setInfo(ioEnergies.get(abbreviation).getEnergy(0), 
                              txt * -p.x, txt * -p.y, p1 * -p.x, p1 * -p.y, p2 * -p.x, p2 * -p.y);
      } else {
+       
        eExchangeInfo.setInfo(ioEnergies.get(abbreviation).getEnergy(2-numValenceElectrons),
                              txt * -p.x, txt * -p.y, p2 * -p.x, p2 * -p.y, p1 * -p.x, p1 * -p.y);
      }         
