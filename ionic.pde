@@ -20,6 +20,8 @@ HashMap<String, IonizationEnergy> ioEnergies;
 
 float windowDiagonal; 
 
+boolean paused = false;
+
 void setup() {
   size(width, height);    // Sketch dimensions
   windowDiagonal = sqrt(width*width + height*height); // Ratio for sizing
@@ -43,8 +45,14 @@ void draw() {
   elements.draw();
   
   textAlign(CENTER, TOP);
-  textSize(windowDiagonal/50);
-  text("press 'c' to clear atoms", width/2, 10);
+  textSize(windowDiagonal/60);
+  text("press 'c' to clear atoms", width/2, windowDiagonal/70);
+  text("press 'p' to pause", width/2, windowDiagonal/30);
+  
+  if (paused) {
+    textSize(windowDiagonal/30);
+    text("PAUSED", width/2, windowDiagonal/20);
+  }
   
   // Update & draw atoms
   for (int i = 0; i < atoms.size(); i++) {
@@ -53,32 +61,34 @@ void draw() {
 }
 
 void mousePressed() { 
-  oldMouse.set(mouseX, mouseY);
+  if (!paused) {
+    oldMouse.set(mouseX, mouseY);
   
   
   
-  for (int i = 0; i < atoms.size(); i++) {
-    Atom a = atoms.get(i);
-      
-    if (a.inside(mouseX, mouseY) && !a.isColliding() && !a.isExchanging()) {
-      a.setSpeed(0.0);
-      a.setRotationAdjust(0.0);
-      a.setCollide(false);
-      if( a.getExchangeAtom() != null) {
-        a.getExchangeAtom().collisionInterfere();
-        a.setCollisionTime(0.0);
-        a.getExchangeAtom().setRotationAdjust(0.0);
-        a.getExchangeAtom().cancelExchange();
+    for (int i = 0; i < atoms.size(); i++) {
+      Atom a = atoms.get(i);
+        
+      if (a.inside(mouseX, mouseY) && !a.isColliding() && !a.isExchanging()) {
+        a.setSpeed(0.0);
+        a.setRotationAdjust(0.0);
+        a.setCollide(false);
+        if( a.getExchangeAtom() != null) {
+          a.getExchangeAtom().collisionInterfere();
+          a.setCollisionTime(0.0);
+          a.getExchangeAtom().setRotationAdjust(0.0);
+          a.getExchangeAtom().cancelExchange();
+        }
+        a.cancelExchange();
+        dragAtoms.add(a);
       }
-      a.cancelExchange();
-      dragAtoms.add(a);
+    } 
+  
+  
+    // If no elements being dragged then check to see if click intention is to create new atom
+    if (dragAtoms.size() == 0) {
+      elements.mouseClick(); 
     }
-  } 
-  
-  
-  // If no elements being dragged then check to see if click intention is to create new atom
-  if (dragAtoms.size() == 0) {
-    elements.mouseClick(); 
   }
 }
 
@@ -116,8 +126,10 @@ void mouseReleased() {
 }
 
 void update() {
-  for (int i = 0; i < atoms.size(); i++) {
-    atoms.get(i).update();
+  if (!paused) {
+    for (int i = 0; i < atoms.size(); i++) {
+      atoms.get(i).update();
+    }
   }
 }
 
@@ -152,6 +164,8 @@ void removeAtoms() {
 void keyPressed() {
   switch(key) {
    case 'c' : removeAtoms();
+              break;
+   case 'p' : paused = !paused;
               break;
    default :   
   }  

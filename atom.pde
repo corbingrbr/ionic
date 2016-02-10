@@ -86,6 +86,7 @@ public class Atom {
   }
   
   public void update() {
+    
     if (collided) {
      
       // Do bounce stuff   
